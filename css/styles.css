@@ -1,0 +1,446 @@
+/* ==========================================================================
+   THEME VARIABLES & BASE STYLES
+   Colors: Dark blue (#0f172a, #1e293b), Black (#090d16), 
+           Cyan Accent (#06b6d4), Light Grey text (#e2e8f0)
+   ========================================================================== */
+:root {
+  --bg-main: #090d16;
+  --bg-card: #0f172a;
+  --bg-surface: #1e293b;
+  --border-color: #334155;
+  --text-primary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --cyan-accent: #06b6d4;
+  --cyan-hover: #0891b2;
+  --danger-red: #ef4444;
+  --success-green: #10b981;
+  --warning-yellow: #f59e0b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   APP LAYOUT & SIDEBAR
+   ========================================================================== */
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.logo h2 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
+.logo span {
+  color: var(--cyan-accent);
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  background-color: rgba(6, 182, 212, 0.15);
+  color: var(--cyan-accent);
+  font-weight: 600;
+  border-left: 4px solid var(--cyan-accent);
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stats-summary {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-pill {
+  background: var(--bg-surface);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
+}
+
+.stat-pill span {
+  color: var(--cyan-accent);
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   VIEWS & SECTIONS MANAGEMENT
+   ========================================================================== */
+.view-section {
+  display: none;
+}
+
+.view-section.active {
+  display: block;
+}
+
+/* ==========================================================================
+   BUTTONS & BADGES
+   ========================================================================== */
+.btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--cyan-accent);
+  color: #000;
+}
+
+.btn-primary:hover {
+  background-color: var(--cyan-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-color);
+}
+
+.btn-danger {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--danger-red);
+  border: 1px solid var(--danger-red);
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-red);
+  color: #fff;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-in-progress { background: rgba(6, 182, 212, 0.2); color: var(--cyan-accent); }
+.badge-completed { background: rgba(16, 185, 129, 0.2); color: var(--success-green); }
+.badge-not-started { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
+.badge-on-hold { background: rgba(245, 158, 11, 0.2); color: var(--warning-yellow); }
+
+.badge-paid { background: rgba(16, 185, 129, 0.2); color: var(--success-green); }
+.badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--warning-yellow); }
+.badge-overdue { background: rgba(239, 68, 68, 0.2); color: var(--danger-red); }
+
+/* ==========================================================================
+   VIEW 1: SPREADSHEET TABLE STYLES
+   ========================================================================== */
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.data-table th, .data-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.data-table th {
+  background-color: var(--bg-surface);
+  color: var(--cyan-accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.link-client-name {
+  color: var(--cyan-accent);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.link-client-name:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   VIEW 2: GRID CARDS VIEW STYLES
+   ========================================================================== */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.client-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.client-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--cyan-accent);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-header h3 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.card-body p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   VIEW 3: CLIENT DETAIL & TASK MANAGER
+   ========================================================================== */
+.mb-20 { margin-bottom: 20px; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.detail-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.detail-panel h3 {
+  color: var(--cyan-accent);
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-color);
+  font-size: 0.9rem;
+}
+
+.info-label { color: var(--text-muted); }
+
+/* Task List */
+.task-input-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.task-input-box input {
+  flex: 1;
+}
+
+.task-list {
+  list-style: none;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--bg-surface);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.task-item.completed span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   MODAL DIALOGUE
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-backdrop.active {
+  display: flex;
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 550px;
+  padding: 24px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+input, select, textarea {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px;
+  border-radius: 6px;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--cyan-accent);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
