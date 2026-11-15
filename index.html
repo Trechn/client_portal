@@ -10,20 +10,32 @@
   <div class="app-container">
     
     <!-- SIDEBAR NAVIGATION -->
-    <!-- THIS IS A GIT TEST -->
-    <aside class="sidebar">
-      <div class="logo">
-        <h2>Client<span>Pulse</span></h2>
-      </div>
-      <nav class="nav-menu">
-        <button class="nav-btn active" id="nav-table-view">
-          <span class="icon">📊</span> Spreadsheet View
+    <aside class="sidebar" id="sidebar">
+      <!-- 1. Sidebar Toggle & Brand Header -->
+      <div class="sidebar-header">
+        <button class="nav-btn toggle-btn" id="btn-toggle-sidebar" title="Toggle Sidebar">
+          <span class="icon">☰</span>
+          <span class="nav-text logo-text">Client<span>Pulse</span></span>
         </button>
-        <button class="nav-btn" id="nav-grid-view">
-          <span class="icon">🎴</span> Client Cards Grid
+      </div>
+
+      <!-- 2 & 3. Main Navigation Links -->
+      <nav class="nav-menu">
+        <button class="nav-btn active" id="nav-table-view" title="Spreadsheet View">
+          <span class="icon">📊</span>
+          <span class="nav-text">Spreadsheet View</span>
+        </button>
+        <button class="nav-btn" id="nav-grid-view" title="Client Cards Grid">
+          <span class="icon">🎴</span>
+          <span class="nav-text">Client Cards Grid</span>
         </button>
       </nav>
-      <button class="btn btn-primary btn-block" id="btn-open-modal">+ New Client</button>
+
+      <!-- 4. New Client Action Button -->
+      <button class="btn btn-primary btn-new-client" id="btn-open-modal" title="New Client">
+        <span class="icon">➕</span>
+        <span class="nav-text">New Client</span>
+      </button>
     </aside>
 
     <!-- MAIN CONTENT AREA -->

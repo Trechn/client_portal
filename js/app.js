@@ -39,6 +39,9 @@ const clientForm = document.getElementById('client-form');
 const statTotal = document.getElementById('stat-total');
 const statActive = document.getElementById('stat-active');
 
+const sidebar = document.getElementById('sidebar');
+const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+
 /* ==========================================================================
    NAVIGATION & VIEW SWITCHING LOGIC
    ========================================================================== */
@@ -72,6 +75,23 @@ function switchView(viewName) {
 navTableViewBtn.addEventListener('click', () => switchView('table'));
 navGridViewBtn.addEventListener('click', () => switchView('grid'));
 btnBackToTable.addEventListener('click', () => switchView('table'));
+
+/* ==========================================================================
+   SIDEBAR COLLAPSE / EXPAND LOGIC
+   ========================================================================== */
+const SIDEBAR_STATE_KEY = 'client_dashboard_sidebar_collapsed';
+
+// Restore saved sidebar state on page load
+if (localStorage.getItem(SIDEBAR_STATE_KEY) === 'true') {
+  sidebar.classList.add('collapsed');
+}
+
+// Toggle collapsed class & save preference
+btnToggleSidebar.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+  const isCollapsed = sidebar.classList.contains('collapsed');
+  localStorage.setItem(SIDEBAR_STATE_KEY, isCollapsed);
+});
 
 /* ==========================================================================
    VIEW 1: RENDERING THE SPREADSHEET TABLE
