@@ -504,3 +504,76 @@ input:focus, select:focus, textarea:focus {
   gap: 10px;
   margin-top: 20px;
 }
+
+/* ==========================================================================
+   DATA EXPORT & IMPORT MODAL STYLES
+   ========================================================================== */
+.data-modal-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.data-box h4 {
+  color: var(--cyan-accent);
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.data-desc {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.data-desc code {
+  background-color: var(--bg-surface);
+  color: var(--cyan-accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.modal-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.import-mode-group {
+  display: flex;
+  gap: 16px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  text-transform: none; /* Overrides global label uppercase */
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+  accent-color: var(--cyan-accent);
+  cursor: pointer;
+}
+
+.import-feedback {
+  font-size: 0.82rem;
+  margin-top: 8px;
+  min-height: 18px;
+}
+
+.import-feedback.success {
+  color: var(--success-green);
+}
+
+.import-feedback.error {
+  color: var(--danger-red);
+}

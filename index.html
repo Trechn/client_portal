@@ -31,7 +31,13 @@
         </button>
       </nav>
 
-      <!-- 4. New Client Action Button -->
+      <!-- 4. Data Export / Import Button -->
+      <button class="nav-btn" id="btn-open-data-modal" title="Export / Import Data">
+        <span class="icon">💾</span>
+        <span class="nav-text">Export / Import</span>
+      </button>
+
+      <!-- 5. New Client Action Button -->
       <button class="btn btn-primary btn-new-client" id="btn-open-modal" title="New Client">
         <span class="icon">➕</span>
         <span class="nav-text">New Client</span>
@@ -163,6 +169,58 @@
           <button type="submit" class="btn btn-primary">Save Client</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- DATA EXPORT / IMPORT MODAL -->
+  <div class="modal-backdrop" id="data-modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Backup & Restore Data</h3>
+        <button class="btn-close" id="btn-close-data-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body data-modal-sections">
+        <!-- EXPORT SECTION -->
+        <div class="data-box">
+          <h4>Export Backup</h4>
+          <p class="data-desc">Download all registered clients and their tasks as a <code>.json</code> file.</p>
+          <button type="button" class="btn btn-primary btn-block" id="btn-export-json">
+            ⬇️ Download JSON Backup
+          </button>
+        </div>
+
+        <hr class="modal-divider">
+
+        <!-- IMPORT SECTION -->
+        <div class="data-box">
+          <h4>Import Backup</h4>
+          <p class="data-desc">Restore client records from a previously exported <code>.json</code> file.</p>
+          
+          <!-- Mode Toggle: Replace vs Merge -->
+          <div class="import-mode-group">
+            <label class="radio-option">
+              <input type="radio" name="importMode" value="replace" checked>
+              <span><strong>Replace</strong> current data</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="importMode" value="merge">
+              <span><strong>Merge</strong> with current data</span>
+            </label>
+          </div>
+
+          <!-- Hidden File Input + Styled Trigger Button -->
+          <input type="file" id="input-import-json" accept=".json,application/json" hidden>
+          <button type="button" class="btn btn-secondary btn-block" id="btn-trigger-import">
+            ⬆️ Select JSON File to Upload
+          </button>
+          <p id="import-feedback" class="import-feedback"></p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-data-modal">Close</button>
+      </div>
     </div>
   </div>
 

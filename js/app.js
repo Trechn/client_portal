@@ -42,6 +42,16 @@ const statActive = document.getElementById('stat-active');
 const sidebar = document.getElementById('sidebar');
 const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
 
+// Data Export / Import Modal Elements
+const dataModalBackdrop = document.getElementById('data-modal-backdrop');
+const btnOpenDataModal = document.getElementById('btn-open-data-modal');
+const btnCloseDataModal = document.getElementById('btn-close-data-modal');
+const btnCancelDataModal = document.getElementById('btn-cancel-data-modal');
+const btnExportJson = document.getElementById('btn-export-json');
+const btnTriggerImport = document.getElementById('btn-trigger-import');
+const inputImportJson = document.getElementById('input-import-json');
+const importFeedback = document.getElementById('import-feedback');
+
 /* ==========================================================================
    NAVIGATION & VIEW SWITCHING LOGIC
    ========================================================================== */
@@ -393,6 +403,116 @@ function getInitialDemoData() {
     }
   ];
 }
+
+/* ==========================================================================
+   DATA EXPORT & IMPORT (JSON BACKUP / RESTORE)
+   ========================================================================== */
+
+function openDataModal() {
+  importFeedback.textContent = '';
+  importFeedback.className = 'import-feedback';
+  dataModalBackdrop.classList.add('active');
+}
+
+function closeDataModal() {
+  dataModalBackdrop.classList.remove('active');
+  inputImportJson.value = ''; // Reset file input so same file can be re-selected
+}
+
+btnOpenDataModal.addEventListener('click', openDataModal);
+btnCloseDataModal.addEventListener('click', closeDataModal);
+btnCancelDataModal.addEventListener('click', closeDataModal);
+
+// 1. EXPORT: Convert clients array to a downloadable .json file
+btnExportJson.addEventListener('click', () => {
+  const jsonString = JSON.stringify(clients, null, 2);
+  const blob = new Blob([jsonString], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  // Create a temporary invisible <a> link and trigger click to download
+  const downloadLink = document.createElement('a');
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  downloadLink.href = url;
+  downloadLink.download = `client-dashboard-backup-${today}.json`;
+
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(url);
+});
+
+// 2. IMPORT: Trigger hidden file picker when styled button is clicked
+btnTriggerImport.addEventListener('click', () => {
+  inputImportJson.click();
+});
+
+// 3. IMPORT: Read & validate uploaded JSON file
+inputImportJson.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = (event) => {
+    try {
+      const importedData = JSON.parse(event.target.result);
+
+      // Basic validation: Make sure it's an array of objects with at least a name
+      if (!Array.isArray(importedData)) {
+        throw new Error('Invalid format: Expected a list of clients.');
+      }
+
+      // Normalize imported items so missing tasks/ids don't break the UI
+      const sanitizedClients = importedData.map((item, index) => ({
+        id: item.id ? String(item.id) : `${Date.now()}-${index}`,
+        name: item.name || 'Unnamed Client',
+        invoice: item.invoice || 'N/A',
+        phone: item.phone || '',
+        email: item.email || '',
+        address: item.address || '',
+        comments: item.comments || '',
+        contactDate: item.contactDate || '',
+        projectStatus: item.projectStatus || 'Not Started',
+        paymentStatus: item.paymentStatus || 'Pending',
+        tasks: Array.isArray(item.tasks) ? item.tasks : []
+      }));
+
+      // Check which radio button is selected ('replace' or 'merge')
+      const selectedMode = document.querySelector('input[name="importMode"]:checked').value;
+
+      if (selectedMode === 'replace') {
+        clients = sanitizedClients;
+      } else {
+        // Merge: Avoid duplicate IDs by generating fresh IDs for merged items if needed
+        const existingIds = new Set(clients.map(c => c.id));
+        const mergedItems = sanitizedClients.map((client, idx) => {
+          if (existingIds.has(client.id)) {
+            return { ...client, id: `${Date.now()}-${idx}` };
+          }
+          return client;
+        });
+        clients = [...mergedItems, ...clients];
+      }
+
+      saveToStorage();
+
+      // Refresh active view
+      if (sectionGridView.classList.contains('active')) {
+        renderGrid();
+      } else {
+        switchView('table');
+      }
+
+      importFeedback.textContent = `Successfully imported ${sanitizedClients.length} client(s)!`;
+      importFeedback.className = 'import-feedback success';
+    } catch (err) {
+      importFeedback.textContent = `Error reading file: ${err.message}`;
+      importFeedback.className = 'import-feedback error';
+    }
+  };
+
+  reader.readAsText(file);
+});
 
 // App Kickoff on DOM Load
 document.addEventListener('DOMContentLoaded', () => {
