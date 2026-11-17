@@ -15,6 +15,9 @@ function saveToStorage() {
   updateStats();
 }
 
+// Stores the ID of the client being edited (null = creating new)
+let editingClientId = null; 
+
 /* ==========================================================================
    DOM ELEMENT SELECTION
    ========================================================================== */
@@ -41,6 +44,9 @@ const statActive = document.getElementById('stat-active');
 
 const sidebar = document.getElementById('sidebar');
 const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+
+const modalTitle = document.getElementById('modal-title');
+const btnSubmitClient = clientForm.querySelector('button[type="submit"]');
 
 // Data Export / Import Modal Elements
 const dataModalBackdrop = document.getElementById('data-modal-backdrop');
@@ -208,7 +214,10 @@ function openClientDetail(id) {
     <div class="detail-grid">
       <!-- Left Panel: Client Profile Data -->
       <div class="detail-panel">
-        <h3>Client Profile Details</h3>
+        <div class="detail-panel-header">
+          <h3>Client Profile Details</h3>
+          <button class="btn btn-secondary btn-sm" id="btn-edit-client">✏️ Edit</button>
+        </div>
         <div class="info-row"><span class="info-label">Client Name:</span> <strong>${escapeHtml(client.name)}</strong></div>
         <div class="info-row"><span class="info-label">Invoice Number:</span> <span>${escapeHtml(client.invoice)}</span></div>
         <div class="info-row"><span class="info-label">Phone Number:</span> <span>${escapeHtml(client.phone)}</span></div>
@@ -245,6 +254,11 @@ function openClientDetail(id) {
       renderTasks(client);
       input.value = '';
     }
+  });
+
+  // Edit Client Button Click Listener
+  document.getElementById('btn-edit-client').addEventListener('click', () => {
+    openEditModal(client);
   });
 }
 
@@ -296,8 +310,37 @@ function renderTasks(client) {
    CLIENT REGISTRATION & FORM MODAL LOGIC
    ========================================================================== */
 
-function openModal() { modalBackdrop.classList.add('active'); }
-function closeModal() { modalBackdrop.classList.remove('active'); clientForm.reset(); }
+function openModal() {
+  editingClientId = null;
+  modalTitle.textContent = 'Register New Client';
+  btnSubmitClient.textContent = 'Save Client';
+  modalBackdrop.classList.add('active');
+}
+
+function openEditModal(client) {
+  editingClientId = client.id;
+  modalTitle.textContent = 'Edit Client Profile';
+  btnSubmitClient.textContent = 'Update Client';
+
+  // Pre-fill all form inputs with the client's current data
+  document.getElementById('clientName').value = client.name;
+  document.getElementById('invoice').value = client.invoice;
+  document.getElementById('phoneNumber').value = client.phone;
+  document.getElementById('email').value = client.email;
+  document.getElementById('address').value = client.address;
+  document.getElementById('comments').value = client.comments;
+  document.getElementById('contactDate').value = client.contactDate;
+  document.getElementById('projectStatus').value = client.projectStatus;
+  document.getElementById('paymentStatus').value = client.paymentStatus;
+
+  modalBackdrop.classList.add('active');
+}
+
+function closeModal() {
+  modalBackdrop.classList.remove('active');
+  clientForm.reset();
+  editingClientId = null; // Always reset edit state on close
+}
 
 btnOpenModal.addEventListener('click', openModal);
 btnCloseModal.addEventListener('click', closeModal);
@@ -306,9 +349,8 @@ btnCancelModal.addEventListener('click', closeModal);
 clientForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // Create new client object from input fields
-  const newClient = {
-    id: Date.now().toString(),
+  // Gather values from the form inputs
+  const formData = {
     name: document.getElementById('clientName').value.trim(),
     invoice: document.getElementById('invoice').value.trim(),
     phone: document.getElementById('phoneNumber').value.trim(),
@@ -317,19 +359,35 @@ clientForm.addEventListener('submit', (e) => {
     comments: document.getElementById('comments').value.trim(),
     contactDate: document.getElementById('contactDate').value,
     projectStatus: document.getElementById('projectStatus').value,
-    paymentStatus: document.getElementById('paymentStatus').value,
-    tasks: []
+    paymentStatus: document.getElementById('paymentStatus').value
   };
 
-  clients.unshift(newClient); // Add to beginning of array
-  saveToStorage();
-  closeModal();
-
-  // Re-render whichever view is currently active
-  if (sectionGridView.classList.contains('active')) {
-    renderGrid();
+  if (editingClientId) {
+    // UPDATE EXISTING CLIENT (preserving id and existing tasks array)
+    const index = clients.findIndex(c => c.id === editingClientId);
+    if (index !== -1) {
+      clients[index] = { ...clients[index], ...formData };
+    }
+    const updatedId = editingClientId;
+    saveToStorage();
+    closeModal();
+    openClientDetail(updatedId); // Re-render detail view immediately with updated info
   } else {
-    switchView('table');
+    // CREATE NEW CLIENT
+    const newClient = {
+      id: Date.now().toString(),
+      ...formData,
+      tasks: []
+    };
+    clients.unshift(newClient);
+    saveToStorage();
+    closeModal();
+
+    if (sectionGridView.classList.contains('active')) {
+      renderGrid();
+    } else {
+      switchView('table');
+    }
   }
 });
 
