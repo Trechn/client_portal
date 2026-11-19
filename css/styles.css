@@ -1,27 +1,40 @@
 /* ==========================================================================
-   THEME VARIABLES & BASE STYLES
-   Colors: Dark blue (#0f172a, #1e293b), Black (#090d16), 
-           Cyan Accent (#06b6d4), Light Grey text (#e2e8f0)
+   GAMEO-INSPIRED DARK TACTICAL THEME
+   - Zero border-radius across all elements
+   - Outfit for boxy geometric headings / Manrope for crisp body text
+   - Easy-to-swap CSS color variables at the top
    ========================================================================== */
 :root {
-  --bg-main: #090d16;
-  --bg-card: #0f172a;
-  --bg-surface: #1e293b;
-  --border-color: #334155;
-  --text-primary: #e2e8f0;
-  --text-muted: #94a3b8;
-  --cyan-accent: #06b6d4;
-  --cyan-hover: #0891b2;
-  --danger-red: #ef4444;
-  --success-green: #10b981;
-  --warning-yellow: #f59e0b;
+  --bg-main: #08090b;         /* Deep pitch-carbon background */
+  --bg-card: #111317;         /* Panel & sidebar dark slate */
+  --bg-surface: #181b21;      /* Elevated table headers & inputs */
+  --border-color: #262a34;    /* Crisp structural hairline border */
+  --border-strong: #3a404e;   /* Hover / focus border */
+  --text-primary: #f4f6f8;    /* High-contrast white text */
+  --text-muted: #8b93a5;      /* Technical grey labels */
+  
+  /* Temporal Accent Color (Swap this hex anytime to test new accents!) */
+  --accent-primary: #00FF41;  /* Tactical Volt Lime */
+  --accent-hover: #00FF41;
+  --accent-text: #08090b;     /* Dark text on bright accent buttons */
+
+  /* Status Colors */
+  --danger-red: #ff3b3b;
+  --success-green: #00e676;
+  --warning-yellow: #ffb300;
+  --info-cyan: #00e5ff;
+
+  /* Font Families */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Manrope', sans-serif;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 0 !important; /* Enforces sharp 0px corners everywhere */
+  font-family: var(--font-body);
 }
 
 body {
@@ -29,6 +42,14 @@ body {
   color: var(--text-primary);
   height: 100vh;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings Typography */
+h1, h2, h3, h4, .logo-text {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 /* ==========================================================================
@@ -46,13 +67,13 @@ body {
   padding: 20px 14px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  transition: width 0.25s ease;
+  gap: 14px;
+  transition: width 0.2s ease;
   overflow: hidden;
-  flex-shrink: 0; /* Prevents sidebar from squishing when table is wide */
+  flex-shrink: 0;
 }
 
-/* Collapsed State: Thin Icon Bar */
+/* Collapsed State: Thin Icon Rail */
 .sidebar.collapsed {
   width: 72px;
   padding: 20px 10px;
@@ -63,58 +84,63 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .logo-text {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.35rem;
+  font-weight: 800;
   color: var(--text-primary);
 }
 
 .logo-text span {
-  color: var(--cyan-accent);
+  color: var(--accent-primary);
 }
 
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 
 .nav-btn {
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   color: var(--text-muted);
   padding: 12px 14px;
   text-align: left;
-  font-size: 0.95rem;
-  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 14px;
   width: 100%;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .nav-btn .icon {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   min-width: 24px;
   text-align: center;
 }
 
 .nav-btn:hover {
   background-color: var(--bg-surface);
+  border-color: var(--border-color);
   color: var(--text-primary);
 }
 
 .nav-btn.active {
-  background-color: rgba(6, 182, 212, 0.15);
-  color: var(--cyan-accent);
-  font-weight: 600;
-  border-left: 4px solid var(--cyan-accent);
+  background-color: rgba(0, 255, 65, 0.08);
+  color: var(--accent-primary);
+  border: 1px solid #00FF41;
+  border-left: 1px solid var(--accent-primary);
 }
 
 /* New Client Button Styling (Adapts to Collapsed Rail) */
@@ -146,19 +172,16 @@ body {
 }
 
 .sidebar.collapsed .nav-btn.active {
-  border-left: none;
-  border-bottom: 3px solid var(--cyan-accent);
+  border-left: 1px solid #00FF41;
+  border-bottom: 1px solid #00FF41;
 }
 
-.stats-summary {
-  display: flex;
-  gap: 12px;
-}
-
-/* ============== MANUAL ===============*/
+/* ==========================================================================
+   MAIN CONTENT AREA & TOP HEADER
+   ========================================================================== */
 .main-content {
   flex: 1;
-  padding: 24px;
+  padding: 28px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -169,21 +192,36 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  padding-bottom: 12px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border-color);
 }
 
+.top-header h1 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.stats-summary {
+  display: flex;
+  gap: 12px;
+}
+
 .stat-pill {
-  background: var(--bg-surface);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  background: var(--bg-card);
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   border: 1px solid var(--border-color);
 }
 
 .stat-pill span {
-  color: var(--cyan-accent);
-  font-weight: bold;
+  color: var(--accent-primary);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  margin-left: 4px;
 }
 
 /* ==========================================================================
@@ -198,24 +236,28 @@ body {
 }
 
 /* ==========================================================================
-   BUTTONS & BADGES
+   BUTTONS & SPEC BADGES
    ========================================================================== */
 .btn {
-  padding: 10px 16px;
-  border-radius: 6px;
-  border: none;
-  font-weight: 600;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.15s ease;
 }
 
 .btn-primary {
-  background-color: var(--cyan-accent);
-  color: #000;
+  background-color: var(--accent-primary);
+  color: var(--accent-text);
+  border-color: var(--accent-primary);
 }
 
 .btn-primary:hover {
-  background-color: var(--cyan-hover);
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn-secondary {
@@ -225,15 +267,16 @@ body {
 }
 
 .btn-secondary:hover {
-  background-color: var(--border-color);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }
 
 .btn-danger {
-  background-color: rgba(239, 68, 68, 0.2);
+  background-color: rgba(255, 59, 59, 0.12);
   color: var(--danger-red);
-  border: 1px solid var(--danger-red);
-  padding: 4px 8px;
-  font-size: 0.8rem;
+  border: 1px solid rgba(255, 59, 59, 0.4);
+  padding: 5px 10px;
+  font-size: 0.75rem;
 }
 
 .btn-danger:hover {
@@ -241,34 +284,74 @@ body {
   color: #fff;
 }
 
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
 .btn-block {
   width: 100%;
 }
 
+/* Technical Spec Badges */
 .badge {
+  display: inline-block;
   padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
 }
 
-.badge-in-progress { background: rgba(6, 182, 212, 0.2); color: var(--cyan-accent); }
-.badge-completed { background: rgba(16, 185, 129, 0.2); color: var(--success-green); }
-.badge-not-started { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
-.badge-on-hold { background: rgba(245, 158, 11, 0.2); color: var(--warning-yellow); }
+.badge-in-progress {
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--info-cyan);
+  border-color: rgba(0, 229, 255, 0.35);
+}
 
-.badge-paid { background: rgba(16, 185, 129, 0.2); color: var(--success-green); }
-.badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--warning-yellow); }
-.badge-overdue { background: rgba(239, 68, 68, 0.2); color: var(--danger-red); }
+.badge-completed {
+  background: rgba(0, 230, 118, 0.1);
+  color: var(--success-green);
+  border-color: rgba(0, 230, 118, 0.35);
+}
+
+.badge-not-started {
+  background: rgba(139, 147, 165, 0.1);
+  color: var(--text-muted);
+  border-color: rgba(139, 147, 165, 0.35);
+}
+
+.badge-on-hold {
+  background: rgba(255, 179, 0, 0.1);
+  color: var(--warning-yellow);
+  border-color: rgba(255, 179, 0, 0.35);
+}
+
+.badge-paid {
+  background: rgba(200, 255, 0, 0.12);
+  color: var(--accent-primary);
+  border-color: rgba(200, 255, 0, 0.4);
+}
+
+.badge-pending {
+  background: rgba(255, 179, 0, 0.1);
+  color: var(--warning-yellow);
+  border-color: rgba(255, 179, 0, 0.35);
+}
+
+.badge-overdue {
+  background: rgba(255, 59, 59, 0.12);
+  color: var(--danger-red);
+  border-color: rgba(255, 59, 59, 0.4);
+}
 
 /* ==========================================================================
    VIEW 1: SPREADSHEET TABLE STYLES
    ========================================================================== */
 .table-container {
   overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--text-muted);
   background-color: var(--bg-card);
 }
 
@@ -276,32 +359,54 @@ body {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .data-table th, .data-table td {
-  padding: 14px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--text-muted);
+  border-right: 1px solid var(--text-muted);
   white-space: nowrap;
+}
+
+.data-table th:last-child, .data-table td:last-child {
+  border-right: none;
 }
 
 .data-table th {
   background-color: var(--bg-surface);
-  color: var(--cyan-accent);
-  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 700;
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  border-bottom: 3px solid var(--text-muted);
 }
 
-.data-table tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.02);
+/* Remove background tint and apply outer 4-sided border highlight on row hover */
+.data-table tbody tr:hover td {
+  /* Draws crisp top and bottom outer borders inside the cells without shifting layout */
+  box-shadow: inset 0 1px 0 0 var(--accent-primary),
+              inset 0 -1px 0 0 var(--accent-primary);
+}
+
+.data-table tbody tr:hover td:first-child {
+  /* Adds the left outer border to the first cell in the row */
+  box-shadow: inset 1px 1px 0 0 var(--accent-primary),
+              inset 0 -1px 0 0 var(--accent-primary);
+}
+
+.data-table tbody tr:hover td:last-child {
+  /* Adds the right outer border to the last cell in the row */
+  box-shadow: inset -1px 1px 0 0 var(--accent-primary),
+              inset 0 -1px 0 0 var(--accent-primary);
 }
 
 .link-client-name {
-  color: var(--cyan-accent);
+  color: var(--accent-primary);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -314,41 +419,50 @@ body {
    ========================================================================== */
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 20px;
 }
 
 .client-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: transform 0.2s, border-color 0.2s;
+  gap: 14px;
+  transition: border-color 0.15s ease;
 }
 
 .client-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--cyan-accent);
+  border-color: var(--accent-primary);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .card-header h3 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
 .card-body p {
   font-size: 0.85rem;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.card-body strong {
+  color: var(--text-primary);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
 }
 
 .card-footer {
@@ -356,7 +470,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 12px;
   border-top: 1px solid var(--border-color);
 }
 
@@ -374,31 +488,53 @@ body {
 .detail-panel {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
   padding: 24px;
 }
 
 .detail-panel h3 {
-  color: var(--cyan-accent);
+  color: var(--accent-primary);
+  font-size: 1.1rem;
   margin-bottom: 16px;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
+  padding-bottom: 10px;
+}
+
+.detail-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+}
+
+.detail-panel-header h3 {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed var(--border-color);
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
   font-size: 0.9rem;
 }
 
-.info-label { color: var(--text-muted); }
+.info-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
 /* Task List */
 .task-input-box {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
@@ -414,10 +550,11 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 10px 12px;
   background-color: var(--bg-surface);
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
   margin-bottom: 8px;
+  font-size: 0.9rem;
 }
 
 .task-item.completed span {
@@ -426,12 +563,12 @@ body {
 }
 
 /* ==========================================================================
-   MODAL DIALOGUE
+   MODAL DIALOGUES (REGISTRATION, EDIT & DATA BACKUP)
    ========================================================================== */
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.82);
   display: none;
   justify-content: center;
   align-items: center;
@@ -444,10 +581,9 @@ body {
 
 .modal {
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 1px solid var(--border-strong);
   width: 100%;
-  max-width: 550px;
+  max-width: 560px;
   padding: 24px;
 }
 
@@ -455,15 +591,29 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
 }
 
 .btn-close {
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   color: var(--text-muted);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 2px 8px;
   cursor: pointer;
+}
+
+.btn-close:hover {
+  color: var(--accent-primary);
+  border-color: var(--border-color);
 }
 
 .form-group {
@@ -480,22 +630,24 @@ body {
 }
 
 label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 input, select, textarea {
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
-  padding: 10px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
   outline: none;
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: var(--cyan-accent);
+  border-color: var(--accent-primary);
 }
 
 .modal-footer {
@@ -503,6 +655,8 @@ input:focus, select:focus, textarea:focus {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
 }
 
 /* ==========================================================================
@@ -515,8 +669,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .data-box h4 {
-  color: var(--cyan-accent);
-  font-size: 1rem;
+  color: var(--accent-primary);
+  font-size: 0.95rem;
   margin-bottom: 6px;
 }
 
@@ -529,9 +683,9 @@ input:focus, select:focus, textarea:focus {
 
 .data-desc code {
   background-color: var(--bg-surface);
-  color: var(--cyan-accent);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-color);
   padding: 2px 6px;
-  border-radius: 4px;
 }
 
 .modal-divider {
@@ -545,7 +699,6 @@ input:focus, select:focus, textarea:focus {
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   padding: 10px 14px;
-  border-radius: 6px;
   margin-bottom: 12px;
 }
 
@@ -555,12 +708,13 @@ input:focus, select:focus, textarea:focus {
   gap: 8px;
   font-size: 0.85rem;
   color: var(--text-primary);
-  text-transform: none; /* Overrides global label uppercase */
+  text-transform: none;
+  letter-spacing: normal;
   cursor: pointer;
 }
 
 .radio-option input[type="radio"] {
-  accent-color: var(--cyan-accent);
+  accent-color: var(--accent-primary);
   cursor: pointer;
 }
 
@@ -576,27 +730,4 @@ input:focus, select:focus, textarea:focus {
 
 .import-feedback.error {
   color: var(--danger-red);
-}
-
-/* ==========================================================================
-   CLIENT DETAIL HEADER & EDIT BUTTON
-   ========================================================================== */
-.detail-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-}
-
-.detail-panel-header h3 {
-  margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 0.8rem;
 }
