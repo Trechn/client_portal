@@ -5,8 +5,8 @@
    - Easy-to-swap CSS color variables at the top
    ========================================================================== */
 :root {
-  --bg-main: #08090b;         /* Deep pitch-carbon background */
-  --bg-card: #111317;         /* Panel & sidebar dark slate */
+  --bg-main: #060608;         /* Deep pitch-carbon background */
+  --bg-card: #1a1a1d;         /* Panel & sidebar dark slate */
   --bg-surface: #181b21;      /* Elevated table headers & inputs */
   --border-color: #262a34;    /* Crisp structural hairline border */
   --border-strong: #3a404e;   /* Hover / focus border */
@@ -351,7 +351,7 @@ h1, h2, h3, h4, .logo-text {
    ========================================================================== */
 .table-container {
   overflow-x: auto;
-  border: 1px solid var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background-color: var(--bg-card);
 }
 
@@ -362,10 +362,18 @@ h1, h2, h3, h4, .logo-text {
   font-size: 0.88rem;
 }
 
-.data-table th, .data-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--text-muted);
-  border-right: 1px solid var(--text-muted);
+/* Duplicated to have different padding*/
+.data-table th {
+  padding: 17px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   white-space: nowrap;
 }
 
@@ -374,14 +382,14 @@ h1, h2, h3, h4, .logo-text {
 }
 
 .data-table th {
-  background-color: var(--bg-surface);
+  background-color: #3a3a3c;
   color: var(--text-primary);
   font-family: var(--font-heading);
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.78rem;
   letter-spacing: 0.08em;
-  border-bottom: 3px solid var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* Remove background tint and apply outer 4-sided border highlight on row hover */
