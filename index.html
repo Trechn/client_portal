@@ -15,11 +15,17 @@
     
     <!-- SIDEBAR NAVIGATION -->
     <aside class="sidebar" id="sidebar">
-      <!-- 1. Sidebar Toggle & Brand Header -->
+      <!-- 1. Sidebar Toggle, Brand Header & Search Trigger -->
       <div class="sidebar-header">
         <button class="nav-btn toggle-btn" id="btn-toggle-sidebar" title="Toggle Sidebar">
           <span class="icon">☰</span>
           <span class="nav-text logo-text">Client<span>Pulse</span></span>
+        </button>
+
+        <!-- Search Trigger (Turns into 🔍 icon when sidebar is collapsed) -->
+        <button class="sidebar-search-trigger" id="btn-open-search-modal" title="Search Clients">
+          <span class="icon">🔍</span>
+          <span class="nav-text search-placeholder-text">Search clients...</span>
         </button>
       </div>
 
@@ -224,6 +230,34 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="btn-cancel-data-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH CLIENTS POPUP MODAL -->
+  <div class="modal-backdrop" id="search-modal-backdrop">
+    <div class="modal modal-search">
+      <div class="modal-header">
+        <h3>Search Client Directory</h3>
+        <button class="btn-close" id="btn-close-search-modal">&times;</button>
+      </div>
+
+      <!-- Top Search Input -->
+      <div class="search-modal-input-wrap">
+        <span class="search-input-icon">🔍</span>
+        <input 
+          type="text" 
+          id="global-search-input" 
+          placeholder="Search by name, invoice, phone, email, address, status, or comments..." 
+          autocomplete="off"
+        >
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-clear-search">Clear</button>
+      </div>
+
+      <!-- 2-Column Client Cards Results Grid -->
+      <div class="search-results-meta" id="search-results-meta">Showing all clients</div>
+      <div class="search-results-grid" id="search-results-grid">
+        <!-- Dynamically populated via JavaScript -->
       </div>
     </div>
   </div>

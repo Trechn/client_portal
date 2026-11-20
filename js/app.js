@@ -58,6 +58,15 @@ const btnTriggerImport = document.getElementById('btn-trigger-import');
 const inputImportJson = document.getElementById('input-import-json');
 const importFeedback = document.getElementById('import-feedback');
 
+// Search Modal Elements
+const btnOpenSearchModal = document.getElementById('btn-open-search-modal');
+const searchModalBackdrop = document.getElementById('search-modal-backdrop');
+const btnCloseSearchModal = document.getElementById('btn-close-search-modal');
+const globalSearchInput = document.getElementById('global-search-input');
+const btnClearSearch = document.getElementById('btn-clear-search');
+const searchResultsMeta = document.getElementById('search-results-meta');
+const searchResultsGrid = document.getElementById('search-results-grid');
+
 /* ==========================================================================
    NAVIGATION & VIEW SWITCHING LOGIC
    ========================================================================== */
@@ -570,6 +579,126 @@ inputImportJson.addEventListener('change', (e) => {
   };
 
   reader.readAsText(file);
+});
+
+/* ==========================================================================
+   GLOBAL SEARCH POPUP & ALL-FIELDS FILTERING
+   ========================================================================== */
+
+function openSearchModal() {
+  searchModalBackdrop.classList.add('active');
+  globalSearchInput.value = '';
+  renderSearchResults('');
+  // Focus input immediately so the user can start typing right away
+  setTimeout(() => globalSearchInput.focus(), 50);
+}
+
+function closeSearchModal() {
+  searchModalBackdrop.classList.remove('active');
+}
+
+function renderSearchResults(query) {
+  const cleanQuery = query.trim().toLowerCase();
+
+  // Filter across ALL client fields (plus task descriptions)
+  const matches = clients.filter(client => {
+    if (!cleanQuery) return true;
+
+    const taskText = Array.isArray(client.tasks)
+      ? client.tasks.map(t => t.text).join(' ')
+      : '';
+
+    const searchableContent = [
+      client.name,
+      client.invoice,
+      client.phone,
+      client.email,
+      client.address,
+      client.comments,
+      client.contactDate,
+      client.projectStatus,
+      client.paymentStatus,
+      taskText
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    return searchableContent.includes(cleanQuery);
+  });
+
+  // Update result counter label
+  searchResultsMeta.textContent = cleanQuery
+    ? `Found ${matches.length} matching client(s)`
+    : `Showing all ${matches.length} client(s)`;
+
+  searchResultsGrid.innerHTML = '';
+
+  if (matches.length === 0) {
+    searchResultsGrid.innerHTML = `
+      <p style="color: var(--text-muted); grid-column: 1 / -1; padding: 20px 0;">
+        No clients match "${escapeHtml(query)}".
+      </p>`;
+    return;
+  }
+
+  // Render 2-column client cards using your existing card classes
+  matches.forEach(client => {
+    const card = document.createElement('div');
+    card.className = 'client-card';
+    card.innerHTML = `
+      <div class="card-header">
+        <h3>${escapeHtml(client.name)}</h3>
+        <span class="badge badge-${slugify(client.projectStatus)}">${client.projectStatus}</span>
+      </div>
+      <div class="card-body">
+        <p><strong>Invoice:</strong> ${escapeHtml(client.invoice)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(client.email)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(client.phone || 'N/A')}</p>
+        <p><strong>Address:</strong> ${escapeHtml(client.address || 'N/A')}</p>
+        <p><strong>Payment:</strong> <span class="badge badge-${slugify(client.paymentStatus)}">${client.paymentStatus}</span></p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary btn-sm btn-search-open-detail" data-id="${client.id}">Open Profile</button>
+      </div>
+    `;
+    searchResultsGrid.appendChild(card);
+  });
+
+  // Clicking "Open Profile" closes the search popup and opens that client's detail view
+  searchResultsGrid.querySelectorAll('.btn-search-open-detail').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetId = e.target.dataset.id;
+      closeSearchModal();
+      openClientDetail(targetId);
+    });
+  });
+}
+
+btnOpenSearchModal.addEventListener('click', openSearchModal);
+btnCloseSearchModal.addEventListener('click', closeSearchModal);
+
+// Close popup if clicking outside the modal box
+searchModalBackdrop.addEventListener('click', (e) => {
+  if (e.target === searchModalBackdrop) closeSearchModal();
+});
+
+// Close popup when pressing Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && searchModalBackdrop.classList.contains('active')) {
+    closeSearchModal();
+  }
+});
+
+// Filter live on every keystroke
+globalSearchInput.addEventListener('input', (e) => {
+  renderSearchResults(e.target.value);
+});
+
+// Clear search input button
+btnClearSearch.addEventListener('click', () => {
+  globalSearchInput.value = '';
+  renderSearchResults('');
+  globalSearchInput.focus();
 });
 
 // App Kickoff on DOM Load
